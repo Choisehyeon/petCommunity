@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_nav"
+    app:startDestination="@id/homeFragment">
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.example.withpet.fragments.HomeFragment"
+        android:label="fragment_home"
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_homeFragment_to_areaFragment"
+            app:destination="@id/areaFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_lifeFragment"
+            app:destination="@id/lifeFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_myFragment"
+            app:destination="@id/myFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_talkFragment"
+            app:destination="@id/talkFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/areaFragment"
+        android:name="com.example.withpet.fragments.AreaFragment"
+        android:label="fragment_area"
+        tools:layout="@layout/fragment_area" >
+        <action
+            android:id="@+id/action_areaFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+        <action
+            android:id="@+id/action_areaFragment_to_lifeFragment"
+            app:destination="@id/lifeFragment" />
+        <action
+            android:id="@+id/action_areaFragment_to_myFragment"
+            app:destination="@id/myFragment" />
+        <action
+            android:id="@+id/action_areaFragment_to_talkFragment"
+            app:destination="@id/talkFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/lifeFragment"
+        android:name="com.example.withpet.fragments.LifeFragment"
+        android:label="fragment_life"
+        tools:layout="@layout/fragment_life" >
+        <action
+            android:id="@+id/action_lifeFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+        <action
+            android:id="@+id/action_lifeFragment_to_areaFragment"
+            app:destination="@id/areaFragment" />
+        <action
+            android:id="@+id/action_lifeFragment_to_talkFragment"
+            app:destination="@id/talkFragment" />
+        <action
+            android:id="@+id/action_lifeFragment_to_myFragment"
+            app:destination="@id/myFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/myFragment"
+        android:name="com.example.withpet.fragments.MyFragment"
+        android:label="fragment_my"
+        tools:layout="@layout/fragment_my" >
+        <action
+            android:id="@+id/action_myFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+        <action
+            android:id="@+id/action_myFragment_to_areaFragment"
+            app:destination="@id/areaFragment" />
+        <action
+            android:id="@+id/action_myFragment_to_talkFragment"
+            app:destination="@id/talkFragment" />
+        <action
+            android:id="@+id/action_myFragment_to_lifeFragment"
+            app:destination="@id/lifeFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/talkFragment"
+        android:name="com.example.withpet.fragments.TalkFragment"
+        android:label="fragment_talk"
+        tools:layout="@layout/fragment_talk" >
+        <action
+            android:id="@+id/action_talkFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+        <action
+            android:id="@+id/action_talkFragment_to_areaFragment"
+            app:destination="@id/areaFragment" />
+        <action
+            android:id="@+id/action_talkFragment_to_lifeFragment"
+            app:destination="@id/lifeFragment" />
+        <action
+            android:id="@+id/action_talkFragment_to_myFragment"
+            app:destination="@id/myFragment" />
+    </fragment>
+</navigation>
