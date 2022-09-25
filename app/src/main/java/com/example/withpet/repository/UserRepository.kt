@@ -3,9 +3,9 @@ package com.example.withpet.repository
 import android.app.Application
 import android.content.Context
 import android.content.Intent
-import android.provider.ContactsContract
-import androidx.lifecycle.MutableLiveData
+import android.graphics.BitmapFactory
 import com.example.withpet.MainActivity
+import com.example.withpet.R
 import com.example.withpet.activities.member.LoginActivity
 import com.example.withpet.dao.UserDao
 import com.example.withpet.database.UserDatabase
@@ -19,8 +19,6 @@ class UserRepository(application: Application) {
     private val userDao : UserDao
 
     private lateinit var auth : FirebaseAuth
-    val loginLoading = MutableLiveData<Boolean>()
-    val joinLoading = MutableLiveData<Boolean>()
 
     init {
         var db = UserDatabase.getDatabase(application)
@@ -29,31 +27,31 @@ class UserRepository(application: Application) {
     }
 
     fun insert(context: Context, email : String, password: String, nickname: String) {
-        joinLoading.value = true
+
         auth.createUserWithEmailAndPassword(email, password)
             .addOnSuccessListener {
-                joinLoading.value = false
+
+                val profile = BitmapFactory.decodeResource(context.resources, R.drawable.profile)
+
                 CoroutineScope(Dispatchers.IO).launch {
-                    userDao.insertUser(User(auth.currentUser!!.uid, nickname, "", ""))
+                    userDao.insertUser(User(auth.currentUser!!.uid, nickname, "", "", profile))
                 }
                 val intent = Intent(context, LoginActivity::class.java)
                 context.startActivity(intent)
             }.addOnFailureListener {
-                joinLoading.value = false
+
             }
 
     }
     fun login(context: Context, email: String, password: String) {
-        loginLoading.value = true
+
         auth.signInWithEmailAndPassword(email, password).addOnSuccessListener {
             println("Login Success")
-            loginLoading.value = false
             val intent = Intent(context, MainActivity::class.java)
             context.startActivity(intent)
 
         }.addOnFailureListener {
             println("Login Error")
-            loginLoading.value = false
         }
     }
 
@@ -70,12 +68,25 @@ class UserRepository(application: Application) {
 
     }
 
-    suspend fun getTownByUid(uid : String) : String =
-        withContext(Dispatchers.IO) {
-            return@withContext userDao.getTownByUid(uid)
+    fun getTownByUid(uid : String, completed : (String) -> Unit)  {
+        CoroutineScope(Dispatchers.IO).launch {
+            completed(userDao.getTownByUid(uid))
         }
+    }
 
-    suspend fun getNicknameByUid(uid : String) : String{
+    fun getRegionByUid(uid: String, completed: (String) -> Unit) {
+        CoroutineScope(Dispatchers.IO).launch {
+            completed(userDao.getRegionByUid(uid))
+        }
+    }
+
+    fun getNicknameList(completed: (List<String>) -> Unit) {
+        CoroutineScope(Dispatchers.IO).launch {
+            completed(userDao.getNickNameList())
+        }
+    }
+
+    fun getNicknameByUid(uid : String) : String{
         return userDao.getNicknameByUid(uid).toString()
     }
 

@@ -65,6 +65,18 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/joinEmail" />
 
+
+            <TextView
+                android:id="@+id/nicknameCheck"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="사용가능"
+                android:textSize="10sp"
+                android:layout_marginRight="15dp"
+                app:layout_constraintBottom_toBottomOf="@+id/joinNickname"
+                app:layout_constraintEnd_toEndOf="@+id/joinNickname"
+                app:layout_constraintTop_toTopOf="@+id/joinNickname" />
+
             <EditText
                 android:id="@+id/joinPw"
                 android:layout_width="match_parent"

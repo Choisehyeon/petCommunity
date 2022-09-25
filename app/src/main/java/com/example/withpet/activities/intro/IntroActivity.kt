@@ -26,11 +26,14 @@ class IntroActivity : AppCompatActivity() {
         setContentView(R.layout.activity_intro)
 
         val userRepository = UserRepository(this.application)
-        viewModel = ViewModelProvider(this, UserViewModelFactory(userRepository)).get(UserViewModel::class.java)
+        viewModel = ViewModelProvider(
+            this,
+            UserViewModelFactory(userRepository)
+        ).get(UserViewModel::class.java)
 
         auth = Firebase.auth
 
-        if(auth.currentUser?.uid == null) {
+        if (auth.currentUser?.uid == null) {
             Handler().postDelayed({
                 startActivity(Intent(this, LoginActivity::class.java))
                 finish()
@@ -38,23 +41,24 @@ class IntroActivity : AppCompatActivity() {
 
         } else {
             viewModel.getTownById(auth.currentUser?.uid!!)
-            if(viewModel._mutableTown.value == "") {
-                Handler().postDelayed({
-                    startActivity(Intent(this, CheckAreaActivity::class.java))
-                    finish()
-                }, 3000)
-            } else {
-                Handler().postDelayed({
-                    startActivity(Intent(this, MainActivity::class.java))
-                    finish()
-                }, 3000)
+            viewModel.getRegionById(auth.currentUser?.uid!!)
+
+            viewModel._mutableTown.observe(this) {
+                if (it == "") {
+                    Handler().postDelayed({
+                        startActivity(Intent(this, CheckAreaActivity::class.java))
+                        finish()
+                    }, 3000)
+                } else {
+                    Handler().postDelayed({
+                        startActivity(Intent(this, MainActivity::class.java))
+                        finish()
+                    }, 3000)
+                }
             }
 
 
-
         }
-
-
 
 
     }

@@ -19,9 +19,11 @@ class UserViewModel(private val repository: UserRepository) : ViewModel() {
 
     val _mutableRegion = MutableLiveData<String>()
     val _mutableTown = MutableLiveData<String?>()
+    val nicknameList = MutableLiveData<List<String>>()
 
     init{
         getTownById(FBAuth.getUid())
+        getRegionById(FBAuth.getUid())
     }
 
     fun join(context: Context, email: String, password: String, nickname : String) {
@@ -38,9 +40,20 @@ class UserViewModel(private val repository: UserRepository) : ViewModel() {
     }
 
     fun getTownById(uid : String) {
-        viewModelScope.launch {
-            _mutableTown.value = repository.getTownByUid(uid)
-            Log.d("main", _mutableTown.value.toString())
+        repository.getTownByUid(uid) {
+            _mutableTown.postValue(it)
+        }
+    }
+
+    fun getRegionById(uid : String) {
+        repository.getRegionByUid(uid) {
+            _mutableRegion.postValue(it)
+        }
+    }
+
+    fun getNicknameList() {
+        repository.getNicknameList {
+            nicknameList.postValue(it)
         }
     }
 

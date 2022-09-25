@@ -8,17 +8,21 @@
         <entry key="app/src/main/res/drawable/button_background.xml" value="0.169" />
         <entry key="app/src/main/res/drawable/edit_border_radius.xml" value="0.169" />
         <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.1645" />
+        <entry key="app/src/main/res/drawable/image_border_radius.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/activity_board_write.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_check_area.xml" value="0.165" />
         <entry key="app/src/main/res/layout/activity_intro.xml" value="0.165" />
         <entry key="app/src/main/res/layout/activity_join.xml" value="0.15520833333333334" />
         <entry key="app/src/main/res/layout/activity_login.xml" value="0.165" />
-        <entry key="app/src/main/res/layout/activity_main.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/activity_main.xml" value="0.335" />
         <entry key="app/src/main/res/layout/fragment_area.xml" value="0.3098958333333333" />
-        <entry key="app/src/main/res/layout/fragment_home.xml" value="0.125" />
+        <entry key="app/src/main/res/layout/fragment_home.xml" value="0.11" />
         <entry key="app/src/main/res/layout/fragment_life.xml" value="0.3098958333333333" />
         <entry key="app/src/main/res/layout/fragment_my.xml" value="0.253125" />
         <entry key="app/src/main/res/layout/fragment_talk.xml" value="0.253125" />
-        <entry key="app/src/main/res/layout/home_board_rv_item.xml" value="0.125" />
+        <entry key="app/src/main/res/layout/home_board_rv_item.xml" value="0.165" />
+        <entry key="app/src/main/res/menu/board_toolbar_item.xml" value="0.2520833333333333" />
+        <entry key="app/src/main/res/menu/main_toolbar_item.xml" value="0.253125" />
       </map>
     </option>
   </component>

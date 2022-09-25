@@ -16,12 +16,18 @@ interface UserDao {
     fun deleteUser(user : User)
 
     @Query("select nickname from User where uid= :uid")
-    suspend fun getNicknameByUid(uid : String) : String
+    fun getNicknameByUid(uid : String) : String
 
     @Query("Update User Set town=:town, region =:region Where uid=:uid")
-    suspend fun updateAddress(town : String, region : String, uid: String)
+    fun updateAddress(town : String, region : String, uid: String)
 
     @Query("select town from User where uid= :uid")
-    suspend fun getTownByUid(uid : String) : String
+    fun getTownByUid(uid : String) : String
+
+    @Query("select region from User where uid= :uid")
+    fun getRegionByUid(uid : String) : String
+
+    @Query("select nickname from User")
+    fun getNickNameList() : List<String>
 
 }

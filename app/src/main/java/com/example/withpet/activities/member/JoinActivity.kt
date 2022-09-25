@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import com.example.withpet.R
@@ -13,6 +14,9 @@ import com.example.withpet.databinding.ActivityJoinBinding
 import com.example.withpet.repository.UserRepository
 import com.example.withpet.viewModel.UserViewModel
 import com.example.withpet.viewModel.UserViewModelFactory
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class JoinActivity : AppCompatActivity() {
 
@@ -25,6 +29,7 @@ class JoinActivity : AppCompatActivity() {
 
         val userRepository = UserRepository(this.application)
         viewModel = ViewModelProvider(this, UserViewModelFactory(userRepository)).get(UserViewModel::class.java)
+        viewModel.getNicknameList()
 
 
         val textWatcher = object : TextWatcher {
@@ -53,6 +58,31 @@ class JoinActivity : AppCompatActivity() {
         val password = binding.joinPw.text.toString()
         val nickname = binding.joinNickname.text.toString()
 
-        viewModel.join(this, email, password, nickname)
+        viewModel.nicknameList.observe(this) {
+
+            val textWatcher = object : TextWatcher {
+                override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                }
+
+                override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                }
+
+                override fun afterTextChanged(p0: Editable?) {
+                    if(it.contains(nickname)) {
+                        binding.nicknameCheck.text = "중복"
+                    } else {
+                        binding.nicknameCheck.text = "사용가능"
+                    }
+                }
+
+            }
+            binding.joinNickname.addTextChangedListener(textWatcher)
+        }
+
+        if(binding.nicknameCheck.text.toString().equals("중복")) {
+            Toast.makeText(this, "닉네임을 바꿔주세요.", Toast.LENGTH_LONG).show()
+        } else {
+            viewModel.join(this, email, password, nickname)
+        }
     }
 }
