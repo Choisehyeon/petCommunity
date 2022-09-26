@@ -10,10 +10,14 @@ import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import com.example.withpet.R
+import com.example.withpet.activities.CheckAreaActivity
 import com.example.withpet.databinding.ActivityJoinBinding
 import com.example.withpet.repository.UserRepository
 import com.example.withpet.viewModel.UserViewModel
 import com.example.withpet.viewModel.UserViewModelFactory
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -22,10 +26,13 @@ class JoinActivity : AppCompatActivity() {
 
     private lateinit var binding : ActivityJoinBinding
     lateinit var viewModel: UserViewModel
+    private lateinit var auth : FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_join)
+
+        auth = Firebase.auth
 
         val userRepository = UserRepository(this.application)
         viewModel = ViewModelProvider(this, UserViewModelFactory(userRepository)).get(UserViewModel::class.java)
@@ -82,7 +89,14 @@ class JoinActivity : AppCompatActivity() {
         if(binding.nicknameCheck.text.toString().equals("중복")) {
             Toast.makeText(this, "닉네임을 바꿔주세요.", Toast.LENGTH_LONG).show()
         } else {
-            viewModel.join(this, email, password, nickname)
+            auth.createUserWithEmailAndPassword(email, password)
+                .addOnSuccessListener {
+                    viewModel.join(this, email, password, nickname)
+                    val intent = Intent(this, CheckAreaActivity::class.java)
+                    startActivity(intent)
+                }.addOnFailureListener {
+
+                }
         }
     }
 }

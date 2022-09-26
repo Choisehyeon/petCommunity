@@ -39,7 +39,7 @@ class MyFragment : Fragment() {
             it.findNavController().navigate(R.id.action_myFragment_to_lifeFragment)
         }
 
-        binding.areaTap.setOnClickListener {
+        binding.bookmarkTap.setOnClickListener {
             it.findNavController().navigate(R.id.action_myFragment_to_areaFragment)
         }
 

@@ -1,5 +1,6 @@
 package com.example.withpet.fragments
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -11,6 +12,8 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.withpet.R
 import com.example.withpet.activities.home.BoardWriteActivity
 import com.example.withpet.activities.home.HomeBoardActivity
@@ -19,6 +22,7 @@ import com.example.withpet.databinding.FragmentHomeBinding
 import com.example.withpet.entity.HomeBoard
 import com.example.withpet.repository.HomeBoardRepository
 import com.example.withpet.repository.UserRepository
+import com.example.withpet.utils.FBAuth
 import com.example.withpet.utils.toVisibility
 import com.example.withpet.viewModel.HomeBoardViewModel
 import com.example.withpet.viewModel.HomeBoardViewModelFactory
@@ -56,13 +60,13 @@ class HomeFragment : Fragment() {
         viewModel._mutableTown.observe(viewLifecycleOwner) { town ->
             binding.townName.text = town.toString()
             viewModel._mutableRegion.observe(viewLifecycleOwner) { region ->
-                boardViewModel.list(region, town!!)
+                boardViewModel.list(region!!, town!!)
             }
         }
 
         boardViewModel.lectureList.observe(viewLifecycleOwner) {
             adapter.updatesList(it)
-            binding.pullToRefresh.isRefreshing = false
+            adapter.notifyDataSetChanged()
         }
 
         boardViewModel.progressVisible.observe(viewLifecycleOwner) {
@@ -77,7 +81,7 @@ class HomeFragment : Fragment() {
             it.findNavController().navigate(R.id.action_homeFragment_to_talkFragment)
         }
 
-        binding.areaTap.setOnClickListener {
+        binding.bookmarkTap.setOnClickListener {
             it.findNavController().navigate(R.id.action_homeFragment_to_areaFragment)
         }
 
@@ -90,7 +94,8 @@ class HomeFragment : Fragment() {
             startActivity(
                  Intent(context, BoardWriteActivity::class.java)
                      .apply {
-                         putExtra(HomeBoardActivity.TOWN_NAME, viewModel._mutableTown.value!!)
+                         putExtra(BoardWriteActivity.TOWN_NAME, viewModel._mutableTown.value!!)
+                         putExtra(BoardWriteActivity.REGION_NAME, viewModel._mutableRegion.value!!)
                      })
 
         }
@@ -98,10 +103,20 @@ class HomeFragment : Fragment() {
         return binding.root
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if(resultCode == Activity.RESULT_OK) {
+            data?.getSerializableExtra("Board_REPLY")?.let {
+                boardViewModel.insert(it as HomeBoard)
+            }
+        }
+    }
+
     private fun startHomeBoardActivity(board : HomeBoard) {
         startActivity(
             Intent(context, HomeBoardActivity::class.java)
-                .apply {  }
+                .apply { putExtra(HomeBoardActivity.DETAIL_BOARD_ID, board.id)}
         )
     }
 

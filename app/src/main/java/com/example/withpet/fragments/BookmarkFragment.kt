@@ -8,11 +8,11 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.findNavController
 import com.example.withpet.R
-import com.example.withpet.databinding.FragmentAreaBinding
+import com.example.withpet.databinding.FragmentBookmarkBinding
 
-class AreaFragment : Fragment() {
+class BookmarkFragment : Fragment() {
 
-    private lateinit var binding : FragmentAreaBinding
+    private lateinit var binding : FragmentBookmarkBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,7 +24,7 @@ class AreaFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_area, container, false)
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_bookmark, container, false)
 
         binding.homeTap.setOnClickListener {
             it.findNavController().navigate(R.id.action_areaFragment_to_homeFragment)

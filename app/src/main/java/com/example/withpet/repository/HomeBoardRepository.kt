@@ -22,6 +22,12 @@ class HomeBoardRepository(application: Application) {
         }
     }
 
+    fun detail(id : Long, completed: (HomeBoard) -> Unit) {
+        CoroutineScope(Dispatchers.IO).launch {
+            completed(homeBoardDao.findById(id))
+        }
+    }
+
     fun getHomeBoardData(region : String, town : String, completed: (List<HomeBoard>) -> Unit) {
         CoroutineScope(Dispatchers.IO).launch {
             completed(homeBoardDao.homeboardData(region, town))

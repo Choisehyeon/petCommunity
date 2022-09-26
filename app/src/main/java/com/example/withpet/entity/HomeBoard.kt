@@ -1,9 +1,11 @@
 package com.example.withpet.entity
 
 import android.graphics.Bitmap
+import android.os.Parcelable
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import java.io.Serializable
 
 @Entity
 data class HomeBoard(
@@ -18,4 +20,5 @@ data class HomeBoard(
     @ColumnInfo(name="price") val price : String,
     @ColumnInfo(name="board_uid") val uid : String,
     @ColumnInfo(name="image") val image : Bitmap
+
 )

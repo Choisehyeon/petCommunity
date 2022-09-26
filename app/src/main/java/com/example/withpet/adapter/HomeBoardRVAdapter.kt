@@ -1,5 +1,6 @@
 package com.example.withpet.adapter
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,6 +18,7 @@ HomeBoardRVAdapter.ViewHolder>() {
     class ViewHolder(itemView : View) : RecyclerView.ViewHolder(itemView) {
         val binding = HomeBoardRvItemBinding.bind(itemView)
         fun bindItems(board: HomeBoard) {
+
             binding.boardTitle.text = board.title
             binding.boardPrice.text = board.price
             binding.boardTime.text = board.time
@@ -28,9 +30,10 @@ HomeBoardRVAdapter.ViewHolder>() {
 
     fun updatesList(homeBoards : List<HomeBoard>) {
         this.homeBoards.clear()
-        this.homeBoards.addAll(homeBoards)
+        this.homeBoards.addAll(homeBoards.reversed())
         notifyDataSetChanged()
     }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HomeBoardRVAdapter.ViewHolder {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.home_board_rv_item, parent, false)

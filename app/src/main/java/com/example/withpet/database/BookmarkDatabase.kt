@@ -1,29 +1,33 @@
 package com.example.withpet.database
 
 import android.content.Context
-import androidx.room.*
+import androidx.room.Database
+import androidx.room.Room
+import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
 import com.example.withpet.converters.Converters
-import com.example.withpet.dao.UserDao
-import com.example.withpet.entity.User
+import com.example.withpet.dao.BookmarkDao
+import com.example.withpet.entity.Bookmark
 
-@Database(entities = [User::class], version = 2)
+@Database(entities = [Bookmark::class], version = 1)
 @TypeConverters(Converters::class)
-abstract class UserDatabase : RoomDatabase() {
-    abstract fun userDao() : UserDao
+abstract class BookmarkDatabase : RoomDatabase() {
+
+    abstract fun bookmarkDao() : BookmarkDao
 
     companion object {
 
         @Volatile
-        private var INSTANCE : UserDatabase ?= null
+        private var INSTANCE : BookmarkDatabase ?= null
 
         fun getDatabase(
             context: Context
-        ) : UserDatabase {
+        ) : BookmarkDatabase {
             return INSTANCE ?: synchronized(this) {
                 val instance = Room.databaseBuilder(
                     context.applicationContext,
-                    UserDatabase::class.java,
-                    "user_database"
+                    BookmarkDatabase::class.java,
+                    "bookmark_database"
                 )
                     .fallbackToDestructiveMigration()
                     .build()
@@ -31,6 +35,5 @@ abstract class UserDatabase : RoomDatabase() {
                 instance
             }
         }
-
     }
 }

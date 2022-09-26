@@ -34,7 +34,7 @@ class TalkFragment : Fragment() {
             it.findNavController().navigate(R.id.action_talkFragment_to_lifeFragment)
         }
 
-        binding.areaTap.setOnClickListener {
+        binding.bookmarkTap.setOnClickListener {
             it.findNavController().navigate(R.id.action_talkFragment_to_areaFragment)
         }
 

@@ -20,6 +20,7 @@ class UserViewModel(private val repository: UserRepository) : ViewModel() {
     val _mutableRegion = MutableLiveData<String>()
     val _mutableTown = MutableLiveData<String?>()
     val nicknameList = MutableLiveData<List<String>>()
+    val _mutableUser = MutableLiveData<User>()
 
     init{
         getTownById(FBAuth.getUid())
@@ -30,9 +31,10 @@ class UserViewModel(private val repository: UserRepository) : ViewModel() {
         repository.insert(context, email, password, nickname)
 
     }
-
-    fun login(context: Context, email: String, password: String) {
-        repository.login(context, email, password)
+    fun getUser(uid : String) {
+        repository.getUser(uid) {
+            _mutableUser.postValue(it)
+        }
     }
 
     fun delete(user : User) {

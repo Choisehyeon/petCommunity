@@ -40,24 +40,10 @@ class IntroActivity : AppCompatActivity() {
             }, 3000)
 
         } else {
-            viewModel.getTownById(auth.currentUser?.uid!!)
-            viewModel.getRegionById(auth.currentUser?.uid!!)
-
-            viewModel._mutableTown.observe(this) {
-                if (it == "") {
-                    Handler().postDelayed({
-                        startActivity(Intent(this, CheckAreaActivity::class.java))
-                        finish()
-                    }, 3000)
-                } else {
-                    Handler().postDelayed({
-                        startActivity(Intent(this, MainActivity::class.java))
-                        finish()
-                    }, 3000)
-                }
-            }
-
-
+            Handler().postDelayed({
+                startActivity(Intent(this, MainActivity::class.java))
+                finish()
+            }, 3000)
         }
 
 

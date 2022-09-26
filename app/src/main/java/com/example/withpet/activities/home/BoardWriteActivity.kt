@@ -1,5 +1,6 @@
 package com.example.withpet.activities.home
 
+import android.app.Activity
 import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
@@ -31,8 +32,10 @@ class BoardWriteActivity : AppCompatActivity() {
     private lateinit var boardImg : Bitmap
     private var isImageUpload = false
 
-
-
+    companion object {
+        const val TOWN_NAME = "town"
+        const val REGION_NAME = "region"
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_board_write)
@@ -52,9 +55,6 @@ class BoardWriteActivity : AppCompatActivity() {
 
             isImageUpload = true
         }
-
-
-
 
 
     }
@@ -115,7 +115,8 @@ class BoardWriteActivity : AppCompatActivity() {
                         0, region!!, town!!, title, content,
                         FBAuth.getTime(), price, FBAuth.getUid(), boardImg)
 
-                    viewModel.insert(board)
+                    val intent = Intent().putExtra("Board_REPLY", board.toString())
+                    setResult(Activity.RESULT_OK, intent)
                     finish()
                 }
                 return true
