@@ -8,6 +8,13 @@
         android:layout_height="match_parent"
         tools:context=".fragments.BookmarkFragment">
 
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/bookmarkRv"
+            android:scrollbars="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="63dp"/>
+
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">

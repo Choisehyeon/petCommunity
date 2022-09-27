@@ -6,8 +6,8 @@ import android.graphics.Bitmap
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
 import android.provider.MediaStore
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
@@ -17,12 +17,9 @@ import com.example.withpet.R
 import com.example.withpet.databinding.ActivityBoardWriteBinding
 import com.example.withpet.entity.HomeBoard
 import com.example.withpet.repository.HomeBoardRepository
-import com.example.withpet.repository.UserRepository
 import com.example.withpet.utils.FBAuth
 import com.example.withpet.viewModel.HomeBoardViewModel
 import com.example.withpet.viewModel.HomeBoardViewModelFactory
-import com.example.withpet.viewModel.UserViewModel
-import com.example.withpet.viewModel.UserViewModelFactory
 
 class BoardWriteActivity : AppCompatActivity() {
 
@@ -115,9 +112,12 @@ class BoardWriteActivity : AppCompatActivity() {
                         0, region!!, town!!, title, content,
                         FBAuth.getTime(), price, FBAuth.getUid(), boardImg)
 
-                    val intent = Intent().putExtra("Board_REPLY", board.toString())
+                    viewModel.insert(board)
+                    val intent = Intent().putExtra("board", board.toString())
                     setResult(Activity.RESULT_OK, intent)
                     finish()
+                    Handler().postDelayed({
+                    }, 3000)
                 }
                 return true
             }

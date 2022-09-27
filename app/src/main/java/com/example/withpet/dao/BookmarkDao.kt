@@ -18,6 +18,6 @@ interface BookmarkDao {
     @Query("select * From bookmark where userId = :userId")
     fun getBookmarkList(userId : String) : List<Bookmark>
 
-    @Query("select id From bookmark")
-    fun getBookmarkIdList() : List<Long>
+    @Query("select id From bookmark where userId =:userId")
+    fun getBookmarkIdList(userId : String) : List<String>
 }

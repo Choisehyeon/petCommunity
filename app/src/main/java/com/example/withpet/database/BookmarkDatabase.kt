@@ -9,7 +9,7 @@ import com.example.withpet.converters.Converters
 import com.example.withpet.dao.BookmarkDao
 import com.example.withpet.entity.Bookmark
 
-@Database(entities = [Bookmark::class], version = 1)
+@Database(entities = [Bookmark::class], version = 2)
 @TypeConverters(Converters::class)
 abstract class BookmarkDatabase : RoomDatabase() {
 

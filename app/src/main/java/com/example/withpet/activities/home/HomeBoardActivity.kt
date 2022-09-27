@@ -2,6 +2,7 @@ package com.example.withpet.activities.home
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import com.example.withpet.R
@@ -24,36 +25,44 @@ import com.example.withpet.viewModel.home.HomeBoardDetailViewModelFactory
 
 class HomeBoardActivity : AppCompatActivity() {
 
-    private lateinit var binding : ActivityHomeBoardBinding
-    private lateinit var viewModel : HomeBoardDetailViewModel
-    private lateinit var userViewModel : UserViewModel
+    private lateinit var binding: ActivityHomeBoardBinding
+    private lateinit var viewModel: HomeBoardDetailViewModel
+    private lateinit var userViewModel: UserViewModel
     private lateinit var bookmarkViewModel: BookmarkListViewModel
 
     companion object {
         const val DETAIL_BOARD_ID = "boardId"
     }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_home_board)
 
         val boardRepository = HomeBoardRepository(this.application)
         viewModel = ViewModelProvider(this, HomeBoardDetailViewModelFactory(boardRepository)).get(
-            HomeBoardDetailViewModel::class.java)
+            HomeBoardDetailViewModel::class.java
+        )
 
         val userRepository = UserRepository(this.application)
-        userViewModel = ViewModelProvider(this, UserViewModelFactory(userRepository)).get(UserViewModel::class.java)
+        userViewModel = ViewModelProvider(
+            this,
+            UserViewModelFactory(userRepository)
+        ).get(UserViewModel::class.java)
 
         val bookmarkRepository = BookmarkRepository(this.application)
-        bookmarkViewModel = ViewModelProvider(this, BookmarkListViewModelFactory(bookmarkRepository)).get(BookmarkListViewModel::class.java)
+        bookmarkViewModel =
+            ViewModelProvider(this, BookmarkListViewModelFactory(bookmarkRepository)).get(
+                BookmarkListViewModel::class.java
+            )
 
         setSupportActionBar(binding.toolbar)
         supportActionBar!!.setDisplayShowTitleEnabled(false)
         supportActionBar!!.setHomeAsUpIndicator(R.drawable.exit_bold)
 
-        bookmarkViewModel.getBookmarkIdList()
+        bookmarkViewModel.getBookmarkIdList(FBAuth.getUid())
 
         val boardId = intent.getLongExtra(DETAIL_BOARD_ID, 0)
-        if(boardId == null) {
+        if (boardId == null) {
             finish()
             return
         }
@@ -65,29 +74,37 @@ class HomeBoardActivity : AppCompatActivity() {
         binding.toolbar.setNavigationOnClickListener { finish() }
 
         viewModel.detail(boardId)
-        val bookmark = Bookmark(0, FBAuth.getUid(), viewModel.homeBoard.value!!.id.toString())
+        val key = FBAuth.getUid() + boardId
 
-        bookmarkViewModel.bookmarkIdList.observe(this) {
-            if(it.contains(bookmark.id)) {
+        bookmarkViewModel.bookmarkIdList.observe(this) { bookmarkList ->
+            var bookmark : MutableList<String> = bookmarkList as MutableList<String>
+
+            if (bookmark.contains(key)) {
                 binding.bookmarkBtn.setImageResource(R.drawable.bookmark_on)
             } else {
                 binding.bookmarkBtn.setImageResource(R.drawable.bookmark_off)
             }
-        }
 
-        binding.bookmarkBtn.setOnClickListener {
+            binding.bookmarkBtn.setOnClickListener {
 
-            bookmarkViewModel.bookmarkIdList.observe(this) {
-                if(it.contains(bookmark.id)) {
-                    bookmarkViewModel.insert(bookmark)
+                if (bookmark.contains(key)) {
+                    bookmark.remove(key)
+                    bookmarkViewModel.delete(Bookmark(key, FBAuth.getUid(), boardId))
+                    binding.bookmarkBtn.setImageResource(R.drawable.bookmark_off)
+
                 } else {
-                    bookmarkViewModel.delete(bookmark)
+                    bookmark.add(key)
+                    bookmarkViewModel.insert(Bookmark(key, FBAuth.getUid(), boardId))
+                    binding.bookmarkBtn.setImageResource(R.drawable.bookmark_on)
                 }
-            }
 
+
+            }
         }
+
 
     }
+
     private fun setDetail(board: HomeBoard) {
 
         userViewModel.getUser(board.uid)

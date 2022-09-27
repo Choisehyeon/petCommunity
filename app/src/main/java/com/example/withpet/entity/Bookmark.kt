@@ -8,9 +8,9 @@ import com.example.withpet.converters.Converters
 
 @Entity
 data class Bookmark(
-    @PrimaryKey(autoGenerate = true)
+    @PrimaryKey
     @ColumnInfo(name="id")
-    val id : Long,
+    val id : String,
     @ColumnInfo(name="userId") val user_id : String,
-    @ColumnInfo(name= "boardId") val board_id : String
+    @ColumnInfo(name= "boardId") val board_id : Long
 )

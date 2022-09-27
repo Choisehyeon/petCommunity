@@ -12,7 +12,7 @@ class BookmarkListViewModel(private val repository: BookmarkRepository) : ViewMo
 
     var progressVisible = MutableLiveData<Boolean>()
     var bookmarkList = MutableLiveData<List<Bookmark>>()
-    var bookmarkIdList = MutableLiveData<List<Long>>()
+    var bookmarkIdList = MutableLiveData<List<String>>()
 
     fun insert(bookmark: Bookmark) {
         repository.insert(bookmark)
@@ -30,8 +30,8 @@ class BookmarkListViewModel(private val repository: BookmarkRepository) : ViewMo
         }
     }
 
-    fun getBookmarkIdList() {
-        repository.getBookmarkIdList {
+    fun getBookmarkIdList(uid:String) {
+        repository.getBookmarkIdList(uid) {
             bookmarkIdList.postValue(it)
         }
     }

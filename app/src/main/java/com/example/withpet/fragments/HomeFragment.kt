@@ -3,17 +3,13 @@ package com.example.withpet.fragments
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.example.withpet.R
 import com.example.withpet.activities.home.BoardWriteActivity
 import com.example.withpet.activities.home.HomeBoardActivity
@@ -22,7 +18,6 @@ import com.example.withpet.databinding.FragmentHomeBinding
 import com.example.withpet.entity.HomeBoard
 import com.example.withpet.repository.HomeBoardRepository
 import com.example.withpet.repository.UserRepository
-import com.example.withpet.utils.FBAuth
 import com.example.withpet.utils.toVisibility
 import com.example.withpet.viewModel.HomeBoardViewModel
 import com.example.withpet.viewModel.HomeBoardViewModelFactory
@@ -31,9 +26,10 @@ import com.example.withpet.viewModel.UserViewModelFactory
 
 class HomeFragment : Fragment() {
 
-    private lateinit var binding : FragmentHomeBinding
+    private lateinit var binding: FragmentHomeBinding
     private lateinit var viewModel: UserViewModel
     private lateinit var boardViewModel: HomeBoardViewModel
+    private lateinit var adapter: HomeBoardRVAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,12 +44,18 @@ class HomeFragment : Fragment() {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_home, container, false)
 
         val userRepository = UserRepository(requireActivity().application)
-        viewModel = ViewModelProvider(this, UserViewModelFactory(userRepository)).get(UserViewModel::class.java)
+        viewModel = ViewModelProvider(
+            this,
+            UserViewModelFactory(userRepository)
+        ).get(UserViewModel::class.java)
 
         val homeBoardRepository = HomeBoardRepository(requireActivity().application)
-        boardViewModel = ViewModelProvider(this, HomeBoardViewModelFactory(homeBoardRepository)).get(HomeBoardViewModel::class.java)
+        boardViewModel =
+            ViewModelProvider(this, HomeBoardViewModelFactory(homeBoardRepository)).get(
+                HomeBoardViewModel::class.java
+            )
 
-        val adapter = HomeBoardRVAdapter()
+        adapter = HomeBoardRVAdapter()
             .apply { onClick = this@HomeFragment::startHomeBoardActivity }
         binding.boardRv.adapter = adapter
 
@@ -92,11 +94,11 @@ class HomeFragment : Fragment() {
         binding.writeBtn.setOnClickListener {
 
             startActivity(
-                 Intent(context, BoardWriteActivity::class.java)
-                     .apply {
-                         putExtra(BoardWriteActivity.TOWN_NAME, viewModel._mutableTown.value!!)
-                         putExtra(BoardWriteActivity.REGION_NAME, viewModel._mutableRegion.value!!)
-                     })
+                Intent(context, BoardWriteActivity::class.java)
+                    .apply {
+                        putExtra(BoardWriteActivity.TOWN_NAME, viewModel._mutableTown.value!!)
+                        putExtra(BoardWriteActivity.REGION_NAME, viewModel._mutableRegion.value!!)
+                    })
 
         }
 
@@ -106,17 +108,24 @@ class HomeFragment : Fragment() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        if(resultCode == Activity.RESULT_OK) {
-            data?.getSerializableExtra("Board_REPLY")?.let {
-                boardViewModel.insert(it as HomeBoard)
+        if (resultCode == Activity.RESULT_OK) {
+
+            boardViewModel.lectureList.observe(this) {
+                val boardList = it as MutableList<HomeBoard>
+                data?.getStringExtra("board").let {
+                    boardList.add(it as HomeBoard)
+                }
+                adapter.updatesList(boardList.reversed())
+                adapter.notifyDataSetChanged()
             }
+
         }
     }
 
-    private fun startHomeBoardActivity(board : HomeBoard) {
+    private fun startHomeBoardActivity(board: HomeBoard) {
         startActivity(
             Intent(context, HomeBoardActivity::class.java)
-                .apply { putExtra(HomeBoardActivity.DETAIL_BOARD_ID, board.id)}
+                .apply { putExtra(HomeBoardActivity.DETAIL_BOARD_ID, board.id) }
         )
     }
 

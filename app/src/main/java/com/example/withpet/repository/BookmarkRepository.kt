@@ -36,9 +36,9 @@ class BookmarkRepository(application: Application) {
         }
     }
 
-    fun getBookmarkIdList(completed: (List<Long>) -> Unit) {
+    fun getBookmarkIdList(uid : String, completed: (List<String>) -> Unit) {
         CoroutineScope(Dispatchers.IO).launch {
-            completed(bookmarkDao.getBookmarkIdList())
+            completed(bookmarkDao.getBookmarkIdList(uid))
         }
     }
 }
