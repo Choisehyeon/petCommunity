@@ -19,6 +19,33 @@
         android:theme="@style/Theme.Withpet"
         tools:targetApi="31">
         <activity
+            android:name=".activities.life.InfoWriteActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.life.InfoListActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.life.WithBoardDetailActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.life.PeopleClickActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.life.WithBoardWriteActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.life.ContestActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.life.PetActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.life.InfoDetailActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.life.WithActivity"
+            android:exported="false" />
+        <activity
             android:name=".activities.home.HomeBoardActivity"
             android:exported="false" />
         <activity

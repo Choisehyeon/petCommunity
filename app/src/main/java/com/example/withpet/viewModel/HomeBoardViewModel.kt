@@ -11,7 +11,8 @@ class HomeBoardViewModel(private val repository: HomeBoardRepository) : ViewMode
 
 
     var progressVisible = MutableLiveData<Boolean>()
-    var lectureList = MutableLiveData<List<HomeBoard>>()
+    var homeboardList = MutableLiveData<List<HomeBoard>>()
+    var homeBoard = MutableLiveData<HomeBoard>()
 
 
     fun insert(board: HomeBoard) {
@@ -21,12 +22,10 @@ class HomeBoardViewModel(private val repository: HomeBoardRepository) : ViewMode
     fun list(region : String, town : String) {
         progressVisible.postValue(true)
         repository.getHomeBoardData(region, town) {
-            this.lectureList.postValue(it)
+            this.homeboardList.postValue(it)
             progressVisible.postValue(false)
         }
     }
-
-
 }
 
 class HomeBoardViewModelFactory(private val repository: HomeBoardRepository) : ViewModelProvider.Factory{

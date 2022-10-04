@@ -77,7 +77,7 @@ class HomeBoardActivity : AppCompatActivity() {
         val key = FBAuth.getUid() + boardId
 
         bookmarkViewModel.bookmarkIdList.observe(this) { bookmarkList ->
-            var bookmark : MutableList<String> = bookmarkList as MutableList<String>
+            var bookmark: MutableList<String> = bookmarkList as MutableList<String>
 
             if (bookmark.contains(key)) {
                 binding.bookmarkBtn.setImageResource(R.drawable.bookmark_on)

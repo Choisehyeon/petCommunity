@@ -70,6 +70,12 @@ class UserRepository(application: Application) {
         }
     }
 
+    fun getNicknameByUid(uid: String, completed : (String?) -> Unit) {
+        CoroutineScope(Dispatchers.IO).launch {
+            completed(userDao.getNicknameByUid(uid))
+        }
+    }
+
     fun getUser(uid : String, completed: (User) -> Unit) {
         CoroutineScope(Dispatchers.IO).launch {
             completed(userDao.getUser(uid))

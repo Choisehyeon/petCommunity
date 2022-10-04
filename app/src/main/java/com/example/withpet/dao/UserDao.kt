@@ -27,6 +27,9 @@ interface UserDao {
     @Query("select region from User where uid= :uid")
     fun getRegionByUid(uid : String) : String
 
+    @Query("select nickname from User where uid=:uid")
+    fun getNicknameByUid(uid: String) : String
+
     @Query("select nickname from User")
     fun getNickNameList() : List<String>
 

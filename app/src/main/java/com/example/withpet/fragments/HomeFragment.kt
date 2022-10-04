@@ -59,17 +59,7 @@ class HomeFragment : Fragment() {
             .apply { onClick = this@HomeFragment::startHomeBoardActivity }
         binding.boardRv.adapter = adapter
 
-        viewModel._mutableTown.observe(viewLifecycleOwner) { town ->
-            binding.townName.text = town.toString()
-            viewModel._mutableRegion.observe(viewLifecycleOwner) { region ->
-                boardViewModel.list(region!!, town!!)
-            }
-        }
-
-        boardViewModel.lectureList.observe(viewLifecycleOwner) {
-            adapter.updatesList(it)
-            adapter.notifyDataSetChanged()
-        }
+        getBoardData()
 
         boardViewModel.progressVisible.observe(viewLifecycleOwner) {
             binding.progressBar.visibility = it.toVisibility()
@@ -109,16 +99,21 @@ class HomeFragment : Fragment() {
         super.onActivityResult(requestCode, resultCode, data)
 
         if (resultCode == Activity.RESULT_OK) {
+            getBoardData()
+        }
+    }
 
-            boardViewModel.lectureList.observe(this) {
-                val boardList = it as MutableList<HomeBoard>
-                data?.getStringExtra("board").let {
-                    boardList.add(it as HomeBoard)
-                }
-                adapter.updatesList(boardList.reversed())
-                adapter.notifyDataSetChanged()
+    private fun getBoardData() {
+        viewModel._mutableTown.observe(viewLifecycleOwner) { town ->
+            binding.townName.text = town.toString()
+            viewModel._mutableRegion.observe(viewLifecycleOwner) { region ->
+                boardViewModel.list(region!!, town!!)
             }
+        }
 
+        boardViewModel.homeboardList.observe(viewLifecycleOwner) {
+            adapter.updatesList(it)
+            adapter.notifyDataSetChanged()
         }
     }
 

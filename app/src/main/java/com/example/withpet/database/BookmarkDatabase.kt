@@ -5,12 +5,10 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import com.example.withpet.converters.Converters
 import com.example.withpet.dao.BookmarkDao
 import com.example.withpet.entity.Bookmark
 
-@Database(entities = [Bookmark::class], version = 2)
-@TypeConverters(Converters::class)
+@Database(entities = [Bookmark::class], version = 4)
 abstract class BookmarkDatabase : RoomDatabase() {
 
     abstract fun bookmarkDao() : BookmarkDao

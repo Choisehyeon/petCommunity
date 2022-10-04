@@ -1,0 +1,99 @@
+package com.example.withpet.activities.life
+
+import androidx.appcompat.app.AppCompatActivity
+import android.os.Bundle
+import android.os.Handler
+import android.view.MenuItem
+import android.view.View
+import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.ViewModelProvider
+import com.example.withpet.R
+import com.example.withpet.activities.home.HomeBoardActivity
+import com.example.withpet.databinding.ActivityWithBoardDetailBinding
+import com.example.withpet.entity.WithBoard
+import com.example.withpet.repository.UserRepository
+import com.example.withpet.repository.WithBoardRepository
+import com.example.withpet.utils.FBAuth
+import com.example.withpet.viewModel.UserViewModel
+import com.example.withpet.viewModel.UserViewModelFactory
+import com.example.withpet.viewModel.life.WithBoardDetailViewModel
+import com.example.withpet.viewModel.life.WithBoardDetailViewModelFactory
+
+class WithBoardDetailActivity : AppCompatActivity() {
+
+    private lateinit var binding : ActivityWithBoardDetailBinding
+    private lateinit var userViewModel: UserViewModel
+    private lateinit var withViewModel : WithBoardDetailViewModel
+
+    companion object {
+        const val DETAIL_WITHBOARD_ID = "withBoardId"
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_with_board_detail)
+
+        val userRepository = UserRepository(this.application)
+        userViewModel = ViewModelProvider(
+            this,
+            UserViewModelFactory(userRepository)
+        ).get(UserViewModel::class.java)
+
+        val withBoardRepository = WithBoardRepository(this.application)
+        withViewModel = ViewModelProvider(
+            this,
+            WithBoardDetailViewModelFactory(withBoardRepository)
+        ).get(WithBoardDetailViewModel::class.java)
+
+        setSupportActionBar(binding.toolbar)
+        supportActionBar!!.setDisplayShowTitleEnabled(false)
+        supportActionBar!!.setHomeAsUpIndicator(R.drawable.exit)
+
+        val boardId = intent.getLongExtra(WithBoardDetailActivity.DETAIL_WITHBOARD_ID, 0)
+        if (boardId == null) {
+            finish()
+            return
+        }
+
+        withViewModel.detail(boardId)
+
+        withViewModel.withBoard.observe(this) {
+            if(it.board_uid.equals(FBAuth.getUid())) {
+                binding.intoBtnArea.visibility = View.INVISIBLE
+            } else {
+                binding.intoBtnArea.visibility = View.VISIBLE
+            }
+        }
+        withViewModel.withBoard.observe(this, this::setDetailInfo)
+    }
+
+    private fun setDetailInfo(board: WithBoard){
+        userViewModel.getUser(board.board_uid)
+
+        userViewModel._mutableUser.observe(this) {
+            binding.userImg.setImageBitmap(it.profile)
+            binding.nickname.text = it.nickname
+        }
+
+        if(board.participants?.size == board.people) {
+            binding.possibleParticipant.text = "모집완료"
+        } else {
+            binding.possibleParticipant.text = "모집중"
+        }
+        binding.wbTitle.text = board.title
+        binding.possible.text = board.age + board.gender
+        binding.date.text = board.date + " " + board.time
+        binding.meetPlace.text = board.place
+        binding.wbContent.text = board.content
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item?.itemId) {
+            android.R.id.home -> {
+                finish()
+                return true
+            }
+            else -> return super.onOptionsItemSelected(item)
+        }
+    }
+}

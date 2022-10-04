@@ -4,6 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.withpet.entity.Bookmark
+import com.example.withpet.entity.HomeBoard
 import com.example.withpet.repository.BookmarkRepository
 import com.example.withpet.repository.HomeBoardRepository
 import com.example.withpet.viewModel.HomeBoardViewModel
