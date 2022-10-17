@@ -4,6 +4,7 @@ import android.app.Application
 import com.example.withpet.dao.InfoBoardDao
 import com.example.withpet.database.InfoBoardDatabase
 import com.example.withpet.entity.InfoBoard
+import com.example.withpet.entity.InfoImage
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -29,7 +30,17 @@ class InfoBoardRepository(application: Application) {
         }
     }
 
-    fun getInfoBoardData(region: String, town : String, completed: (List<InfoBoard>) -> Unit) {
-        completed(infoBoardDao.infoBoardData(region, town))
+    fun updateImgList(imgList : List<String>, id : Long) {
+        CoroutineScope(Dispatchers.IO).launch {
+            infoBoardDao.updateImgList(imgList, id)
+        }
     }
+
+    fun getInfoBoardData(region: String, town : String, completed: (List<InfoBoard>) -> Unit) {
+        CoroutineScope(Dispatchers.IO).launch {
+            completed(infoBoardDao.infoBoardData(region, town))
+        }
+    }
+
+
 }

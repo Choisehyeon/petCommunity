@@ -64,6 +64,8 @@ class CheckAreaActivity : AppCompatActivity(), OnMapReadyCallback {
         val userRepository = UserRepository(this.application)
         viewModel = ViewModelProvider(this, UserViewModelFactory(userRepository)).get(UserViewModel::class.java)
 
+
+        Log.d("main", checkPermissionForLocation(this).toString())
         if(checkPermissionForLocation(this)) {
             startProcess()
 
@@ -145,7 +147,7 @@ class CheckAreaActivity : AppCompatActivity(), OnMapReadyCallback {
     }
     @SuppressLint("MissingPermission")
     fun setUpdateLocationListener() {
-        val locationRequest = LocationRequest.create()
+        /*val locationRequest = LocationRequest.create()
         locationRequest.run {
             priority = LocationRequest.PRIORITY_HIGH_ACCURACY //높은 정확도
             interval = 1000000
@@ -166,8 +168,14 @@ class CheckAreaActivity : AppCompatActivity(), OnMapReadyCallback {
             locationRequest,
             locationCallback,
             Looper.myLooper()
-        )
-    }//좌표계를 주기적으로 갱신
+        )*/
+       val locationManager = getSystemService(LOCATION_SERVICE) as LocationManager
+
+       val current = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER) as Location
+        Log.d("check", current.toString())
+        setLastLocation(current)
+
+    }
 
     fun setLastLocation(location: Location) {
         val myLocation = LatLng(location.latitude, location.longitude)
@@ -191,7 +199,7 @@ class CheckAreaActivity : AppCompatActivity(), OnMapReadyCallback {
             .enqueue(object : Callback<address> {
                 override fun onResponse(call: Call<address>, response: Response<address>) {
                     val result = response.body()!!.results[0]
-                    Log.d("main", result.toString())
+
                     viewModel._mutableTown.value = result.region.area3.name
                     viewModel._mutableRegion.value = result.region.area2.name
 

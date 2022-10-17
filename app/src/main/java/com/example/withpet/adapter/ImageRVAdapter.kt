@@ -1,21 +1,24 @@
 package com.example.withpet.adapter
 
 import android.graphics.Bitmap
+import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.withpet.R
+import com.example.withpet.activities.life.InfoWriteActivity
 import com.example.withpet.databinding.ImgboardRvItemBinding
 
-class ImageRVAdapter(val list : ArrayList<Bitmap>) :RecyclerView.Adapter<ImageRVAdapter.ViewHolder>(){
+class ImageRVAdapter(val list : ArrayList<Uri>) :RecyclerView.Adapter<ImageRVAdapter.ViewHolder>(){
 
+    var onClick : (ArrayList<Uri>) -> Unit = {}
     class ViewHolder(itemView : View) : RecyclerView.ViewHolder(itemView) {
 
         val binding = ImgboardRvItemBinding.bind(itemView)
 
-        fun bindItems(image : Bitmap) {
-            binding.infoImg.setImageBitmap(image)
+        fun bindItems(image : Uri) {
+            binding.infoImg.setImageURI(image)
         }
     }
 
@@ -29,8 +32,9 @@ class ImageRVAdapter(val list : ArrayList<Bitmap>) :RecyclerView.Adapter<ImageRV
         val image = list[position]
         holder.bindItems(image)
         holder.binding.removeBtn.setOnClickListener {
-            list.removeAt(position)
-            notifyItemRemoved(position)
+            list.remove(image)
+            onClick(list)
+            notifyDataSetChanged()
         }
 
     }

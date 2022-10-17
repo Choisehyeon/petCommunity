@@ -4,6 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.withpet.entity.InfoBoard
+import com.example.withpet.entity.InfoImage
 import com.example.withpet.repository.InfoBoardRepository
 
 class InfoBoardListViewModel(private val repository : InfoBoardRepository) : ViewModel() {
@@ -11,6 +12,7 @@ class InfoBoardListViewModel(private val repository : InfoBoardRepository) : Vie
     val progressVisible = MutableLiveData<Boolean>()
     var infoBoardList = MutableLiveData<List<InfoBoard>>()
     var infoBoard = MutableLiveData<InfoBoard>()
+    var imgList = MutableLiveData<List<String>>()
 
     fun insert(board : InfoBoard) {
         repository.insert(board)
@@ -23,6 +25,12 @@ class InfoBoardListViewModel(private val repository : InfoBoardRepository) : Vie
             progressVisible.postValue(false)
         }
     }
+
+    fun updateImgList(img_List : List<String>, id : Long) {
+        repository.updateImgList(img_List, id)
+    }
+
+
 }
 class InfoBoardListViewModelFactory(private val repository: InfoBoardRepository) : ViewModelProvider.Factory {
     override fun<T : ViewModel> create(modelClass : Class<T>) : T {

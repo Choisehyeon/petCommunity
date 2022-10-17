@@ -13,9 +13,9 @@ data class InfoBoard(
     @ColumnInfo(name = "region") val reiong: String,
     @ColumnInfo(name = "town") val town: String,
     @ColumnInfo(name = "content") val content: String,
-    @ColumnInfo(name = "imgList") val imgList: List<Bitmap>,
-    @ColumnInfo(name = "place") val place : String,
-    @ColumnInfo(name = "board_uid") val board_uid : String,
-    @ColumnInfo(name = "write_time") val write_time : String,
+    @ColumnInfo(name = "place") val place: String,
+    @ColumnInfo(name = "board_uid") val board_uid: String,
+    @ColumnInfo(name = "write_time") val write_time: String,
     @ColumnInfo(name="board_nickname") val nickname: String,
+    @ColumnInfo(name="img_list") var imgList: List<String>?
 )

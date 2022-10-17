@@ -1,6 +1,7 @@
 package com.example.withpet.activities.home
 
 import android.app.Activity
+import android.app.ProgressDialog
 import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
@@ -28,6 +29,7 @@ class BoardWriteActivity : AppCompatActivity() {
     private var image : Uri? = null
     private lateinit var boardImg : Bitmap
     private var isImageUpload = false
+    private lateinit var progress_Dialog: ProgressDialog
 
     companion object {
         const val TOWN_NAME = "town"
@@ -114,9 +116,12 @@ class BoardWriteActivity : AppCompatActivity() {
 
                     viewModel.insert(board)
                     val intent = Intent().putExtra("board", board.toString())
-                    setResult(Activity.RESULT_OK, intent)
-                    finish()
+                    setResult(RESULT_OK, intent)
+                    setdialog()
+                    progress_Dialog.show()
                     Handler().postDelayed({
+                        progress_Dialog.dismiss()
+                        finish()
                     }, 3000)
                 }
                 return true
@@ -130,5 +135,14 @@ class BoardWriteActivity : AppCompatActivity() {
         val bitmap: Bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri)
         boardImg = bitmap
 
+    }
+
+
+    fun setdialog() {
+        var message = "저장중입니다. \n잠시만 기다려주세요."
+        progress_Dialog = ProgressDialog(this)
+        progress_Dialog.setMessage(message)
+        progress_Dialog.setCancelable(false)
+        progress_Dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER)
     }
 }

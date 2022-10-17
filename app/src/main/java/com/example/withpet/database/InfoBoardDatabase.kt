@@ -6,13 +6,13 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.example.withpet.converters.Converters
-import com.example.withpet.converters.ListBitmapConverters
+import com.example.withpet.converters.ListStringConverters
 import com.example.withpet.dao.InfoBoardDao
 import com.example.withpet.entity.InfoBoard
 
 
-@Database(entities = [InfoBoard::class], version = 1)
-@TypeConverters(Converters::class, ListBitmapConverters::class)
+@Database(entities = [InfoBoard::class], version = 8)
+@TypeConverters(ListStringConverters::class, Converters::class)
 abstract class InfoBoardDatabase : RoomDatabase() {
 
     abstract fun infoBoardDao() : InfoBoardDao
