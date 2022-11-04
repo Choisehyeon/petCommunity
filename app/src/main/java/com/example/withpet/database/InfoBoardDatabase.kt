@@ -11,7 +11,7 @@ import com.example.withpet.dao.InfoBoardDao
 import com.example.withpet.entity.InfoBoard
 
 
-@Database(entities = [InfoBoard::class], version = 8)
+@Database(entities = [InfoBoard::class], version = 10)
 @TypeConverters(ListStringConverters::class, Converters::class)
 abstract class InfoBoardDatabase : RoomDatabase() {
 

@@ -20,7 +20,7 @@ HomeBoardRVAdapter.ViewHolder>() {
         fun bindItems(board: HomeBoard) {
 
             binding.boardTitle.text = board.title
-            binding.boardPrice.text = board.price
+            binding.boardPrice.text = board.price + "원"
             binding.boardTime.text = board.time
             binding.boardPlace.text = board.town
             binding.boardImg.setImageBitmap(board.image)

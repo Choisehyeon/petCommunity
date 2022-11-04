@@ -1,12 +1,18 @@
 package com.example.withpet.activities.life
 
+import android.graphics.Bitmap
+import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
+import android.provider.CalendarContract
+import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.example.withpet.R
 import com.example.withpet.activities.home.HomeBoardActivity
 import com.example.withpet.databinding.ActivityWithBoardDetailBinding
@@ -24,6 +30,7 @@ class WithBoardDetailActivity : AppCompatActivity() {
     private lateinit var binding : ActivityWithBoardDetailBinding
     private lateinit var userViewModel: UserViewModel
     private lateinit var withViewModel : WithBoardDetailViewModel
+    var participantsImgList = mutableListOf<Bitmap>()
 
     companion object {
         const val DETAIL_WITHBOARD_ID = "withBoardId"
@@ -68,10 +75,15 @@ class WithBoardDetailActivity : AppCompatActivity() {
     }
 
     private fun setDetailInfo(board: WithBoard){
+        var list = mutableListOf<String>()
         userViewModel.getUser(board.board_uid)
 
         userViewModel._mutableUser.observe(this) {
-            binding.userImg.setImageBitmap(it.profile)
+            Glide.with(this)
+                .load(it.profile)
+                .apply(RequestOptions().circleCrop())
+                .into(binding.userImg)
+
             binding.nickname.text = it.nickname
         }
 
@@ -85,6 +97,39 @@ class WithBoardDetailActivity : AppCompatActivity() {
         binding.date.text = board.date + " " + board.time
         binding.meetPlace.text = board.place
         binding.wbContent.text = board.content
+        if(board.participants == null) {
+            binding.intoPerson.text = "0"
+        } else {
+            binding.intoPerson.text = board.participants?.size.toString()
+        }
+        binding.allPerson.text = board.people.toString()
+
+        if((board.participants != null && board.participants.contains(FBAuth.getUid())) || board.board_uid.equals(FBAuth.getUid())) {
+            binding.intoBtn.isEnabled = false
+            binding.intoBtn.setBackgroundColor(Color.GRAY)
+        } else {
+            binding.intoBtn.isEnabled = true
+        }
+
+        getParticipantsImgList(board.participants!!)
+        Log.d("withBoard", participantsImgList.toString())
+
+        binding.intoBtn.setOnClickListener {
+            list = board.participants as MutableList<String>
+            list.add(FBAuth.getUid())
+
+            withViewModel.updateParticipants(board.id, list)
+        }
+    }
+
+    private fun getParticipantsImgList(participants : List<String>) {
+        participants.forEach {
+            userViewModel.getUser(it)
+
+            userViewModel._mutableUser.observe(this) {
+                participantsImgList.add(it.profile!!)
+            }
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

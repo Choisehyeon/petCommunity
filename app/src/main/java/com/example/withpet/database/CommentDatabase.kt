@@ -5,12 +5,13 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import com.example.withpet.converters.Converters
 import com.example.withpet.converters.UserConverters
 import com.example.withpet.dao.CommentDao
 import com.example.withpet.entity.Comment
 
-@Database(entities = [Comment::class], version = 2)
-@TypeConverters(UserConverters::class)
+@Database(entities = [Comment::class], version = 5)
+@TypeConverters(Converters::class)
 abstract class CommentDatabase : RoomDatabase() {
 
     abstract fun commentDao() : CommentDao

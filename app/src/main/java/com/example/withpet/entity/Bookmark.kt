@@ -10,5 +10,5 @@ data class Bookmark(
     @ColumnInfo(name="id")
     val id : String,
     @ColumnInfo(name="userId") val user_id : String,
-    @ColumnInfo(name= "boardId") val board_id: Long
+    @Embedded(prefix = "board") val board: HomeBoard
 )

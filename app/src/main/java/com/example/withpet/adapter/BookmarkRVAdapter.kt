@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.withpet.R
 import com.example.withpet.dao.HomeBoardDao
 import com.example.withpet.database.HomeBoardDatabase
@@ -27,12 +28,22 @@ class BookmarkRVAdapter: RecyclerView.Adapter<BookmarkRVAdapter.ViewHolder>() {
 
     private val bookmarkList = mutableListOf<Bookmark>()
     var onClick : (HomeBoard) -> Unit = {}
+    var onRemoveClick : (Bookmark) -> Unit = {}
 
 
     class ViewHolder(itemView : View) : RecyclerView.ViewHolder(itemView) {
         val binding = BookmarkRvItemBinding.bind(itemView)
 
         fun bindItems(bookmark : Bookmark) {
+
+            Glide.with(itemView)
+                .load(bookmark.board.image)
+                .into(binding.boardImg)
+
+            binding.boardTitle.text = bookmark.board.title
+            binding.boardPlace.text = bookmark.board.town
+            binding.boardTime.text = bookmark.board.time
+            binding.boardPrice.text = bookmark.board.price + "원"
 
         }
     }
@@ -55,7 +66,13 @@ class BookmarkRVAdapter: RecyclerView.Adapter<BookmarkRVAdapter.ViewHolder>() {
     override fun onBindViewHolder(holder: BookmarkRVAdapter.ViewHolder, position: Int) {
         val bookmark = bookmarkList[position]
         holder.bindItems(bookmark)
-        holder.itemView.setOnClickListener {  }
+        holder.itemView.setOnClickListener {
+            onClick(bookmark.board)
+        }
+        holder.binding.bookmarkBtn.setOnClickListener {
+            holder.binding.bookmarkBtn.setImageResource(R.drawable.bookmark_off)
+            onRemoveClick(bookmark)
+        }
     }
 
     override fun getItemCount(): Int {

@@ -14,6 +14,7 @@ import com.example.withpet.R
 import com.example.withpet.activities.home.HomeBoardActivity
 import com.example.withpet.adapter.BookmarkRVAdapter
 import com.example.withpet.databinding.FragmentBookmarkBinding
+import com.example.withpet.entity.Bookmark
 import com.example.withpet.entity.HomeBoard
 import com.example.withpet.repository.BookmarkRepository
 import com.example.withpet.repository.HomeBoardRepository
@@ -56,6 +57,7 @@ class BookmarkFragment : Fragment() {
 
         adapter = BookmarkRVAdapter()
             .apply { onClick = this@BookmarkFragment::startHomeBoardActivity}
+            .apply { onRemoveClick = this@BookmarkFragment::removeBookmark }
         binding.bookmarkRv.adapter = adapter
 
         viewModel.getBookmarkList(FBAuth.getUid())
@@ -82,6 +84,11 @@ class BookmarkFragment : Fragment() {
         }
         return binding.root
     }
+
+    private fun removeBookmark(bookmark: Bookmark) {
+        viewModel.delete(bookmark)
+    }
+
     private fun startHomeBoardActivity(board: HomeBoard) {
         startActivity(
             Intent(context, HomeBoardActivity::class.java)

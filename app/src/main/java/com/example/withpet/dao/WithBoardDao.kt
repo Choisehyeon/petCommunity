@@ -20,4 +20,7 @@ interface WithBoardDao {
 
     @Query("select * from withboard where id=:id")
     fun findById(id : Long) : WithBoard
+
+    @Query("Update WithBoard Set participants=:participatns Where id=:id")
+    fun updateParticipants(id : Long, participatns : List<String>)
 }

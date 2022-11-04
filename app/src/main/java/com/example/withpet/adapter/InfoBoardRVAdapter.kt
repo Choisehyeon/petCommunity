@@ -12,6 +12,8 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.bumptech.glide.request.RequestOptions
 import com.example.withpet.R
 import com.example.withpet.databinding.InfoboardRvItemBinding
 import com.example.withpet.entity.InfoBoard
@@ -52,6 +54,7 @@ class InfoBoardRVAdapter: RecyclerView.Adapter<InfoBoardRVAdapter.ViewHolder>() 
 
                 Glide.with(itemView)
                     .load(bitmap)
+                    .apply(RequestOptions.bitmapTransform(RoundedCorners(15)))
                     .into(binding.infoImgArea)
 
                 if (board.imgList!!.size > 1) {

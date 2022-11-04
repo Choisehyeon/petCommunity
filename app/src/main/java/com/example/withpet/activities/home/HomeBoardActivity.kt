@@ -5,6 +5,8 @@ import android.os.Bundle
 import android.util.Log
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.example.withpet.R
 import com.example.withpet.databinding.ActivityHomeBoardBinding
 import com.example.withpet.entity.Bookmark
@@ -86,18 +88,18 @@ class HomeBoardActivity : AppCompatActivity() {
             }
 
             binding.bookmarkBtn.setOnClickListener {
+                viewModel.homeBoard.observe(this) {
+                    if (bookmark.contains(key)) {
+                        bookmark.remove(key)
+                        bookmarkViewModel.delete(Bookmark(key, FBAuth.getUid(),  it))
+                        binding.bookmarkBtn.setImageResource(R.drawable.bookmark_off)
 
-                if (bookmark.contains(key)) {
-                    bookmark.remove(key)
-                    bookmarkViewModel.delete(Bookmark(key, FBAuth.getUid(), boardId))
-                    binding.bookmarkBtn.setImageResource(R.drawable.bookmark_off)
-
-                } else {
-                    bookmark.add(key)
-                    bookmarkViewModel.insert(Bookmark(key, FBAuth.getUid(), boardId))
-                    binding.bookmarkBtn.setImageResource(R.drawable.bookmark_on)
+                    } else {
+                        bookmark.add(key)
+                        bookmarkViewModel.insert(Bookmark(key, FBAuth.getUid(),  it))
+                        binding.bookmarkBtn.setImageResource(R.drawable.bookmark_on)
+                    }
                 }
-
 
             }
         }
@@ -112,7 +114,10 @@ class HomeBoardActivity : AppCompatActivity() {
         binding.boardImg.setImageBitmap(board.image)
 
         userViewModel._mutableUser.observe(this) {
-            binding.userImg.setImageBitmap(it.profile)
+            Glide.with(this)
+                .load(it.profile)
+                .apply(RequestOptions().circleCrop())
+                .into(binding.userImg)
             binding.nickname.text = it.nickname
         }
 

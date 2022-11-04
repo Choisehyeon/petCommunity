@@ -14,6 +14,7 @@ import com.example.withpet.databinding.ActivityWithBinding
 import com.example.withpet.entity.WithBoard
 import com.example.withpet.repository.UserRepository
 import com.example.withpet.repository.WithBoardRepository
+import com.example.withpet.utils.FBAuth
 import com.example.withpet.utils.toVisibility
 import com.example.withpet.viewModel.UserViewModel
 import com.example.withpet.viewModel.UserViewModelFactory
@@ -73,10 +74,9 @@ class WithActivity : AppCompatActivity() {
 
     }
     fun getListData() {
-        userViewModel._mutableRegion.observe(this) { region ->
-            userViewModel._mutableTown.observe(this) { town ->
-                withBoardViewModel.list(region, town!!)
-            }
+        userViewModel.getUser(FBAuth.getUid())
+        userViewModel._mutableUser.observe(this) {
+            withBoardViewModel.list(it.region, it.town)
         }
 
         withBoardViewModel.withBoardList.observe(this) {

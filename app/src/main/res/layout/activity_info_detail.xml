@@ -45,8 +45,6 @@
                         android:layout_width="60dp"
                         android:layout_height="60dp"
                         android:layout_marginLeft="20dp"
-                        android:background="@drawable/profile_img_radius"
-                        android:clipToOutline="true"
                         android:scaleType="fitXY"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
@@ -132,8 +130,6 @@
                         android:id="@+id/info_img"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:background="@drawable/image_border_radius_transparent"
-                        android:clipToOutline="true"
                         android:scaleType="fitXY" />
 
                     <TextView

@@ -15,6 +15,7 @@ import androidx.core.widget.addTextChangedListener
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.example.withpet.R
 import com.example.withpet.activities.ImageViewActivity
 import com.example.withpet.adapter.InfoCommentRVAdapter
@@ -110,15 +111,18 @@ class InfoDetailActivity : AppCompatActivity() {
             }
         })
 
+        userViewModel.getUser(FBAuth.getUid())
         binding.chatUpBtn.setOnClickListener {
-            userViewModel.getUser(FBAuth.getUid())
-            userViewModel._mutableUser.observe(this) {
-                commentViewModel.insert(Comment(0, boardId, it, FBAuth.getTime(), binding.chatEdit.text.toString()))
-            }
+            insertComment(boardId)
             binding.chatEdit.setText("")
-            imm.hideSoftInputFromWindow(binding.chatEdit.windowToken,0)
+            imm.hideSoftInputFromWindow(binding.chatEdit.windowToken, 0)
             binding.chatUpBtn.visibility = View.INVISIBLE
-            getCommentData(boardId)
+        }
+    }
+
+    fun insertComment(boardId : Long) {
+        userViewModel._mutableUser.observe(this) {
+            commentViewModel.insert(Comment(0, boardId, it, FBAuth.getTime(), binding.chatEdit.text.toString()))
         }
     }
 
@@ -143,7 +147,10 @@ class InfoDetailActivity : AppCompatActivity() {
         userViewModel.getUser(board.board_uid)
 
         userViewModel._mutableUser.observe(this) {
-            binding.userImg.setImageBitmap(it.profile)
+            Glide.with(this)
+                .load(it.profile)
+                .apply(RequestOptions().circleCrop())
+                .into(binding.userImg)
             binding.nickname.text = it.nickname
             binding.place.text = it.town
         }

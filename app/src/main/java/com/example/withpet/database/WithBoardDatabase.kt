@@ -5,12 +5,14 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import com.example.withpet.converters.Converters
+import com.example.withpet.converters.ListStringConverters
 import com.example.withpet.converters.UserListConverters
 import com.example.withpet.dao.WithBoardDao
 import com.example.withpet.entity.WithBoard
 
-@Database(entities = [WithBoard::class], version = 4)
-@TypeConverters(UserListConverters::class)
+@Database(entities = [WithBoard::class], version = 5)
+@TypeConverters(ListStringConverters::class)
 abstract class WithBoardDatabase : RoomDatabase() {
 
     abstract fun WithBoardDao() : WithBoardDao

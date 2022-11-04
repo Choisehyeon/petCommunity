@@ -1,6 +1,7 @@
 package com.example.withpet.entity
 
 import androidx.room.ColumnInfo
+import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
@@ -22,5 +23,5 @@ data class WithBoard(
     @ColumnInfo(name="writeTime") val writeTime : String,
     @ColumnInfo(name="board_uid") val board_uid : String,
     @ColumnInfo(name="board_nickname") val nickname: String,
-    @ColumnInfo(name="participantList") val participants : List<User>?
+    @ColumnInfo(name = "participants") val participants : List<String>?
 )

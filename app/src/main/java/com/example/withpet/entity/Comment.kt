@@ -1,6 +1,8 @@
 package com.example.withpet.entity
 
+import android.graphics.Bitmap
 import androidx.room.ColumnInfo
+import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
@@ -12,7 +14,7 @@ data class Comment(
     val id : Long,
     @ColumnInfo(name="board_id")
     val board_id: Long,
-    @ColumnInfo(name="write_user")
+    @Embedded(prefix = "user")
     val user : User,
     @ColumnInfo(name="write_time")
     val time : String,

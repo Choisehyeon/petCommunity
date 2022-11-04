@@ -20,6 +20,7 @@ import com.example.withpet.databinding.FragmentHomeBinding
 import com.example.withpet.entity.HomeBoard
 import com.example.withpet.repository.HomeBoardRepository
 import com.example.withpet.repository.UserRepository
+import com.example.withpet.utils.FBAuth
 import com.example.withpet.utils.toVisibility
 import com.example.withpet.viewModel.HomeBoardViewModel
 import com.example.withpet.viewModel.HomeBoardViewModelFactory
@@ -106,11 +107,10 @@ class HomeFragment : Fragment() {
     }
 
     private fun getBoardData() {
-        viewModel._mutableTown.observe(viewLifecycleOwner) { town ->
-            binding.townName.text = town.toString()
-            viewModel._mutableRegion.observe(viewLifecycleOwner) { region ->
-                boardViewModel.list(region!!, town!!)
-            }
+        viewModel.getUser(FBAuth.getUid())
+        viewModel._mutableUser.observe(viewLifecycleOwner) {
+            binding.townName.text = it.town
+            boardViewModel.list(it.region, it.town)
         }
 
         boardViewModel.homeboardList.observe(viewLifecycleOwner) {

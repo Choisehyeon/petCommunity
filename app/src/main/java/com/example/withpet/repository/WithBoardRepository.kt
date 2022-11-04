@@ -21,6 +21,13 @@ class WithBoardRepository(application : Application) {
             withBoardDao.insertWithBoard(board)
         }
     }
+
+    fun updateParticipants(id : Long, parti : List<String>) {
+        CoroutineScope(Dispatchers.IO).launch {
+            withBoardDao.updateParticipants(id, parti)
+        }
+    }
+
     fun detail(id : Long, completed: (WithBoard) -> Unit) {
         CoroutineScope(Dispatchers.IO).launch {
             completed(withBoardDao.findById(id))

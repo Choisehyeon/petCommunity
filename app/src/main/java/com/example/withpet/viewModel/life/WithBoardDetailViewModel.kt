@@ -17,6 +17,10 @@ class WithBoardDetailViewModel(private val repository: WithBoardRepository) : Vi
             progressVisible.postValue(false)
         }
     }
+
+    fun updateParticipants(id : Long, participatns : List<String>) {
+        repository.updateParticipants(id, participatns)
+    }
 }
 class WithBoardDetailViewModelFactory(private val repository: WithBoardRepository) : ViewModelProvider.Factory{
     override fun <T : ViewModel> create(modelClass: Class<T>): T {

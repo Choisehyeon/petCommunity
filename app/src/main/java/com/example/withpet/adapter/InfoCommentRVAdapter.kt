@@ -1,12 +1,16 @@
 package com.example.withpet.adapter
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.example.withpet.R
 import com.example.withpet.databinding.CommentRvItemBinding
 import com.example.withpet.entity.Comment
+import kotlinx.coroutines.withContext
 
 class InfoCommentRVAdapter : RecyclerView.Adapter<InfoCommentRVAdapter.ViewHolder>() {
 
@@ -16,7 +20,11 @@ class InfoCommentRVAdapter : RecyclerView.Adapter<InfoCommentRVAdapter.ViewHolde
         val binding = CommentRvItemBinding.bind(itemView)
 
         fun bindItems(comment : Comment) {
-            binding.profileImg.setImageBitmap(comment.user.profile)
+            Glide.with(itemView)
+                .load(comment.user.profile)
+                .apply(RequestOptions().circleCrop())
+                .into(binding.profileImg)
+
             binding.nickName.text = comment.user.nickname
             binding.townName.text = comment.user.town
             binding.writeTime.text = comment.time
