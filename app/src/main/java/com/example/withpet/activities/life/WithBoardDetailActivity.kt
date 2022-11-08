@@ -110,9 +110,10 @@ class WithBoardDetailActivity : AppCompatActivity() {
         } else {
             binding.intoBtn.isEnabled = true
         }
-
-        getParticipantsImgList(board.participants!!)
-        Log.d("withBoard", participantsImgList.toString())
+        if(board.participants != null) {
+            getParticipantsImgList(board.participants!!)
+            Log.d("withBoard", participantsImgList.toString())
+        }
 
         binding.intoBtn.setOnClickListener {
             list = board.participants as MutableList<String>
