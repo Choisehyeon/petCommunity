@@ -2,12 +2,11 @@ package com.example.withpet.activities
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.TaskStackBuilder.create
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.location.Geocoder
-import android.location.Location
-import android.location.LocationManager
+import android.location.*
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -28,7 +27,9 @@ import com.example.withpet.utils.FBAuth
 import com.example.withpet.viewModel.UserViewModel
 import com.example.withpet.viewModel.UserViewModelFactory
 import com.google.android.gms.location.*
+import com.google.android.gms.location.LocationRequest
 import com.naver.maps.geometry.LatLng
+
 import com.naver.maps.map.*
 import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.util.FusedLocationSource
@@ -39,23 +40,24 @@ import retrofit2.Response
 class CheckAreaActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private lateinit var binding : ActivityCheckAreaBinding
-    private lateinit var locationSource: FusedLocationSource
     private lateinit var naverMap: NaverMap
     private lateinit var viewModel: UserViewModel
+    private lateinit var locationSource: FusedLocationSource
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
 
-    //내 위치를 가져오는 코드
-    lateinit var fusedLocationProviderClient: FusedLocationProviderClient //자동으로 gps값을 받아온다.
-    lateinit var locationCallback: LocationCallback //gps응답 값을 가져온다.
+//등록
+
     //lateinit: 나중에 초기화 해주겠다는 의미
     var lat: Double = 0.0
     var lng: Double = 0.0
 
     companion object {
-
-        private const val LOCATION_PERMISSION_REQUEST_CODE = 1000
+        const val LOCATION_PERMISSION_REQUEST_CODE = 1000
         private const val api_Key = "7oh71ceh0m"
         private const val api_Secret = "bPiZKoSnIQHRkntF5H6VXrH36l6cnWePeIEhCG5p"
     }
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -64,16 +66,14 @@ class CheckAreaActivity : AppCompatActivity(), OnMapReadyCallback {
         val userRepository = UserRepository(this.application)
         viewModel = ViewModelProvider(this, UserViewModelFactory(userRepository)).get(UserViewModel::class.java)
 
-
-        Log.d("main", checkPermissionForLocation(this).toString())
-        if(checkPermissionForLocation(this)) {
-            startProcess()
-
-        }
-
-        //내장 위치 추적 기능 사용
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
         locationSource =
             FusedLocationSource(this, LOCATION_PERMISSION_REQUEST_CODE)
+        Log.d("main", checkPermissionForLocation(this).toString())
+
+        if(checkPermissionForLocation(this)) {
+            startProcess()
+        }
 
         binding.townBtn.setOnClickListener {
             viewModel.updateAddress(this, FBAuth.getUid())
@@ -92,6 +92,7 @@ class CheckAreaActivity : AppCompatActivity(), OnMapReadyCallback {
             true
         }
     }
+
     fun startProcess() {
         //네이버 맵 동적으로 불러오기
         val fm = supportFragmentManager
@@ -102,20 +103,6 @@ class CheckAreaActivity : AppCompatActivity(), OnMapReadyCallback {
         mapFragment.getMapAsync(this)
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int,
-                                            permissions: Array<String>,
-                                            grantResults: IntArray) {
-        if (locationSource.onRequestPermissionsResult(requestCode, permissions,
-                grantResults)) {
-            if (!locationSource.isActivated) { // 권한 거부됨
-                naverMap.locationTrackingMode = LocationTrackingMode.None
-            }
-            return
-        }
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-    }
-
-
     @SuppressLint("MissingPermission")
     override fun onMapReady(naverMap: NaverMap) {
         this.naverMap = naverMap
@@ -124,7 +111,6 @@ class CheckAreaActivity : AppCompatActivity(), OnMapReadyCallback {
         val uiSettings = naverMap.uiSettings
         uiSettings.isLocationButtonEnabled = true
 
-        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
         setUpdateLocationListener()
 
 
@@ -142,55 +128,54 @@ class CheckAreaActivity : AppCompatActivity(), OnMapReadyCallback {
             marker.map = naverMap
         }
 
-
-
     }
-    @SuppressLint("MissingPermission")
-    fun setUpdateLocationListener() {
-        /*val locationRequest = LocationRequest.create()
-        locationRequest.run {
-            priority = LocationRequest.PRIORITY_HIGH_ACCURACY //높은 정확도
-            interval = 1000000
-        }
 
-        locationCallback = object : LocationCallback() {
-            override fun onLocationResult(locationResult: LocationResult) {
-                locationResult ?: return
-                for ((i, location) in locationResult.locations.withIndex()) {
-                    Log.d("location: ", "${location.latitude}, ${location.longitude}")
-                    setLastLocation(location)
-                }
+    val locationCallback : LocationCallback = object : LocationCallback() {
+        override fun onLocationResult(locationResult: LocationResult) {
+            locationResult?.let {
+                val location = it.locations[it.locations.size-1]
+
+                val myLocation = LatLng(location.latitude, location.longitude)
+                val marker = Marker()
+                marker.position = myLocation
+
+                marker.map = naverMap
+                //마커
+                val cameraUpdate = CameraUpdate.scrollTo(myLocation)
+                naverMap.moveCamera(cameraUpdate)
+                naverMap.maxZoom = 18.0
+                naverMap.minZoom = 5.0
+                Log.d("main", location.toString())
+                getAddress(location)
             }
         }
-        //location 요청 함수 호출 (locationRequest, locationCallback)
-
-        fusedLocationProviderClient.requestLocationUpdates(
-            locationRequest,
-            locationCallback,
-            Looper.myLooper()
-        )*/
-       val locationManager = getSystemService(LOCATION_SERVICE) as LocationManager
-
-       val current = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER) as Location
-        Log.d("check", current.toString())
-        setLastLocation(current)
-
     }
 
-    fun setLastLocation(location: Location) {
-        val myLocation = LatLng(location.latitude, location.longitude)
-        val marker = Marker()
-        marker.position = myLocation
+    override fun onRequestPermissionsResult(requestCode: Int,
+                                            permissions: Array<String>,
+                                            grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                setUpdateLocationListener()
 
-        marker.map = naverMap
-        //마커
-        val cameraUpdate = CameraUpdate.scrollTo(myLocation)
-        naverMap.moveCamera(cameraUpdate)
-        naverMap.maxZoom = 18.0
-        naverMap.minZoom = 5.0
-        getAddress(location)
-
+            } else {
+                Log.d("ttt", "onRequestPermissionsResult() _ 권한 허용 거부")
+            }
+        }
     }
+
+
+    @SuppressLint("MissingPermission")
+    fun setUpdateLocationListener() {
+        val locationRequest = LocationRequest.create()
+        locationRequest.run {
+            priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+            interval = 60 * 1000
+        }
+        fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, Looper.getMainLooper())
+    }
+
 
     fun getAddress(location : Location) {
         val coord = "${location.longitude}, ${location.latitude}"
@@ -214,6 +199,7 @@ class CheckAreaActivity : AppCompatActivity(), OnMapReadyCallback {
                 }
 
             })
-
     }
+
+
 }
