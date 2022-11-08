@@ -9,7 +9,7 @@ import com.example.withpet.converters.Converters
 import com.example.withpet.dao.HomeBoardDao
 import com.example.withpet.entity.HomeBoard
 
-@Database(entities = [HomeBoard::class], version = 2)
+@Database(entities = [HomeBoard::class], version = 3)
 @TypeConverters(Converters::class)
 abstract class HomeBoardDatabase : RoomDatabase() {
 

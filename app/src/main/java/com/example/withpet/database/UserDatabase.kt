@@ -6,7 +6,7 @@ import com.example.withpet.converters.Converters
 import com.example.withpet.dao.UserDao
 import com.example.withpet.entity.User
 
-@Database(entities = [User::class], version = 2)
+@Database(entities = [User::class], version = 3)
 @TypeConverters(Converters::class)
 abstract class UserDatabase : RoomDatabase() {
     abstract fun userDao() : UserDao

@@ -10,7 +10,7 @@ import com.example.withpet.converters.UserConverters
 import com.example.withpet.dao.CommentDao
 import com.example.withpet.entity.Comment
 
-@Database(entities = [Comment::class], version = 5)
+@Database(entities = [Comment::class], version = 6)
 @TypeConverters(Converters::class)
 abstract class CommentDatabase : RoomDatabase() {
 

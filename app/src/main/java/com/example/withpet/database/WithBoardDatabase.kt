@@ -11,7 +11,7 @@ import com.example.withpet.converters.UserListConverters
 import com.example.withpet.dao.WithBoardDao
 import com.example.withpet.entity.WithBoard
 
-@Database(entities = [WithBoard::class], version = 5)
+@Database(entities = [WithBoard::class], version = 6)
 @TypeConverters(ListStringConverters::class)
 abstract class WithBoardDatabase : RoomDatabase() {
 
